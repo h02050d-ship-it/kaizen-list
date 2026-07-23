@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#d97706">
+<title>改善リスト｜林材木店</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23d97706'/><text x='51' y='46.5' font-size='60' text-anchor='middle' dominant-baseline='central' fill='%23ffffff' font-family='sans-serif' font-weight='bold'>改</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23d97706'/><text x='51' y='46.5' font-size='60' text-anchor='middle' dominant-baseline='central' fill='%23ffffff' font-family='sans-serif' font-weight='bold'>改</text></svg>">
+<meta name="apple-mobile-web-app-title" content="改善リスト">
+<style>
+:root{
+  --bg:#f7f4ee; --card:#ffffff; --ink:#2e281f; --sub:#8a8171; --line:#e8e1d3;
+  --accent:#d97706; --accent2:#b45309; --danger:#d15a3c; --ok:#3d8a4f; --warn:#e08a1e; --info:#2f74c0;
+  --chip:#f3ead9; --hl:#faf5ea;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:96px}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:16px}
+
+header{position:sticky;top:0;z-index:30;background:var(--accent);color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 10px rgba(46,40,31,.18)}
+header .ttl{font-size:16px;font-weight:800;letter-spacing:.04em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .ttl small{display:block;font-size:10px;font-weight:600;opacity:.78;letter-spacing:.1em}
+.hbtn{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:700;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.hbtn:active{background:rgba(255,255,255,.28)}
+#srcBadge{border:0;background:rgba(0,0,0,.16);color:#ffe9c9;border-radius:99px;padding:5px 10px;font-size:10.5px;font-weight:700}
+#srcBadge.err{color:#ffd9c9}
+
+main{padding:10px 14px 0;max-width:820px;margin:0 auto}
+@media(min-width:1000px){main{max-width:1100px}}
+
+.pchips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 2px 12px}
+.pchip{border:1.5px solid var(--line);background:var(--card);color:var(--sub);border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:800}
+.pchip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.tcard{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--cc,#9ab);border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 5px rgba(46,40,31,.06);cursor:pointer}
+.tcard .th{display:flex;align-items:center;gap:7px}
+.tcard .th .t{font-size:15px;font-weight:800;flex:1;min-width:0}
+.tcard .body{font-size:12.5px;color:var(--ink);opacity:.9;line-height:1.5;margin-top:6px}
+.tcard .body .lbl{font-size:10px;font-weight:800;color:var(--sub);display:block}
+.tcard .meta{font-size:10.5px;color:var(--sub);margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sbadge{font-size:10px;font-weight:800;padding:3px 10px;border-radius:99px}
+.sb-out{background:#eceae4;color:#6a6355}
+.sb-do{background:#e6eef8;color:var(--info)}
+.sb-chk{background:#fbeed6;color:var(--warn)}
+.sb-fin{background:#e7f4ec;color:var(--ok)}
+.catb{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--chip);color:var(--accent2)}
+@media(min-width:1000px){#list .cards{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;align-items:start}}
+
+.empty{text-align:center;color:var(--sub);padding:52px 0;font-size:13px;line-height:2}
+.empty .big{font-size:34px}
+
+#fab{position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:40;border:0;border-radius:99px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;padding:15px 22px;box-shadow:0 6px 18px rgba(180,83,9,.4);display:none;align-items:center;gap:7px}
+#fab:active{transform:scale(.96)}
+
+.mwrap{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(46,40,31,.45)}
+.mwrap.show{display:flex}
+.modal{background:var(--card);width:100%;max-width:640px;max-height:90vh;border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .18s ease}
+@media(min-width:700px){.mwrap{align-items:center}.modal{border-radius:20px}}
+@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+.mhead{display:flex;align-items:center;padding:16px 18px 10px}
+.mhead h2{font-size:16px;font-weight:800;flex:1}
+.mx{border:0;background:var(--chip);border-radius:99px;width:32px;height:32px;font-size:14px;color:var(--sub)}
+.mbody{overflow-y:auto;padding:2px 18px 18px;-webkit-overflow-scrolling:touch}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-size:12px;font-weight:800;color:var(--sub);margin-bottom:5px}
+.fld label em{color:var(--danger);font-style:normal;margin-left:2px}
+.fld input[type=text],.fld select,.fld textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:11px;background:#fff;outline:none}
+.fld textarea{min-height:52px;resize:vertical;line-height:1.5}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--accent)}
+.row2{display:flex;gap:10px}
+.row2>.fld{flex:1}
+.merr{color:var(--danger);font-size:12px;font-weight:700;text-align:center;min-height:18px;padding-top:6px}
+.msave{width:100%;border:0;border-radius:13px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;padding:14px 0;margin-top:4px}
+.msave:disabled{opacity:.5}
+.mdel{width:100%;border:1.5px solid #e8cfc3;background:#fff;border-radius:13px;color:var(--danger);font-size:13px;font-weight:800;padding:12px 0;margin-top:10px}
+
+#gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:22px}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px 24px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(46,40,31,.12);text-align:center}
+.gcard .logo{font-size:40px}
+.gcard h1{font-size:17px;font-weight:800;margin:8px 0 2px}
+.gcard p{font-size:11.5px;color:var(--sub);margin-bottom:18px}
+.gcard input{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:10px;outline:none;background:#fff}
+.gcard input:focus{border-color:var(--accent)}
+.pwrow{position:relative}
+.pwrow button{position:absolute;right:4px;top:4px;border:0;background:none;font-size:15px;padding:8px}
+.gkeep{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--sub);margin:4px 0 14px}
+.gkeep input{width:16px;height:16px;accent-color:var(--accent)}
+#gateBtn{width:100%;border:0;border-radius:12px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;padding:13px 0}
+#gateErr{color:var(--danger);font-size:12px;font-weight:700;min-height:18px;margin-top:10px}
+
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 86px);transform:translateX(-50%) translateY(20px);z-index:80;background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:11px 20px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%)}
+.spin{display:inline-block;width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp 1s linear infinite;margin-bottom:12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ttl">💡 改善リスト<small>HAYASHI LUMBER — ムダの洗い出し・対策管理</small></div>
+  <button id="srcBadge">…</button>
+  <a class="hbtn" id="sheetBtn" target="_blank" style="display:none">📊</a>
+</header>
+
+<main id="list"></main>
+
+<button id="fab">＋ 追加</button>
+
+<!-- 改善 追加・編集 -->
+<div class="mwrap" id="thWrap">
+  <div class="modal">
+    <div class="mhead"><h2 id="thTitle">改善アイテムを追加</h2><button class="mx" data-close="thWrap">✕</button></div>
+    <div class="mbody">
+      <div class="row2">
+        <div class="fld"><label>分類</label>
+          <select id="tCat"><option>現場</option><option>事務</option><option>その他</option></select>
+        </div>
+        <div class="fld"><label>状態</label>
+          <select id="tStatus"><option>洗い出し</option><option>対策中</option><option>効果確認</option><option>完了</option></select>
+        </div>
+      </div>
+      <div class="fld"><label>タイトル<em>*</em></label><input type="text" id="tTitle" placeholder="例：モルダーの埋木飛びを減らす"></div>
+      <div class="fld"><label>現状のムダ</label><textarea id="tWaste" placeholder="いま何がムダ・ロスになっているか"></textarea></div>
+      <div class="fld"><label>対策案</label><textarea id="tPlan" placeholder="どう改善するか"></textarea></div>
+      <div class="fld"><label>メモ</label><textarea id="tMemo" placeholder="補足（任意）"></textarea></div>
+      <div class="merr" id="thErr"></div>
+      <button class="msave" id="thSave">保存する</button>
+      <button class="mdel" id="thDel" style="display:none">🗑 この項目を削除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ログインゲート -->
+<div id="gate">
+  <div class="gcard">
+    <div class="logo">💡</div>
+    <h1>改善リスト</h1>
+    <p>現場・事務のムダを洗い出して対策まで管理</p>
+    <input id="gateMail" type="email" placeholder="メールアドレス" autocomplete="username">
+    <div class="pwrow">
+      <input id="gatePass" type="password" placeholder="パスワード" autocomplete="current-password">
+      <button id="pwEye" type="button">👁</button>
+    </div>
+    <label class="gkeep"><input type="checkbox" id="gateKeep" checked>この端末でログインを保持する</label>
+    <button id="gateBtn">ログイン</button>
+    <div id="gateErr"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ===== 接続設定（データはモルダー修正ボードと同じGAS/スプシの「改善リスト」シート） ===== */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCuoNKlyC3x9AN1XA3eNe1RXOld21X5ubvLobrqvB3NvArugqcPsdmP-VgzBbw2-X3/exec';
+const CRED_KEY="hayazai_kaizenlist_cred";
+const CACHE_KEY="hayazai_kaizenlist_cache";
+
+/* ===== 状態 ===== */
+let THEMES=[], SHEET_URL="";
+let TSTATUS="all";
+let editThId=null;
+
+/* ===== 資格情報（共通SSO: h02050d-ship-it.github.io の他ツールのログインを引き継ぐ）===== */
+const SSO_KEY="hayazai_sso_cred";
+const SSO_PEERS=["hayazai_board_cred","hayazai_seiso_cred","hayazai_rulebook_cred","hayazai_kaizen_cred","notify_creds_v1","seinodesk_cred","faxdesk_cred","orderdesk_cred","nippou_cred"];
+function ssoFind_(){
+  const keys=[SSO_KEY].concat(SSO_PEERS);
+  for(const k of keys){
+    try{ const v=JSON.parse(localStorage.getItem(k)||"null");
+      if(v){ const email=v.email||v.e, pass=v.pass||v.p; if(email&&pass) return {email:String(email),pass:String(pass)}; }
+    }catch(e){}
+  }
+  return null;
+}
+function ssoWrite(email,pass){ try{ localStorage.setItem(SSO_KEY,JSON.stringify({email:email,pass:pass})); }catch(e){} }
+function ssoClear(){ try{ localStorage.removeItem(SSO_KEY); }catch(e){} }
+function creds(){
+  try{ const v=JSON.parse(localStorage.getItem(CRED_KEY)||sessionStorage.getItem(CRED_KEY)||"null"); if(v&&v.email&&v.pass) return v; }catch(e){}
+  const s=ssoFind_(); if(s){ try{ localStorage.setItem(CRED_KEY,JSON.stringify(s)); }catch(e){} return s; }
+  return {};
+}
+function saveCreds(email,pass,keep){ const v=JSON.stringify({email,pass}); if(keep){ localStorage.setItem(CRED_KEY,v); sessionStorage.removeItem(CRED_KEY); } else { sessionStorage.setItem(CRED_KEY,v); localStorage.removeItem(CRED_KEY); } ssoWrite(email,pass); }
+function clearCreds(){ localStorage.removeItem(CRED_KEY); sessionStorage.removeItem(CRED_KEY); localStorage.removeItem(CACHE_KEY); ssoClear(); }
+function authQS(){ const c=creds(); return "email="+encodeURIComponent(c.email||"")+"&pass="+encodeURIComponent(c.pass||""); }
+
+/* ===== ユーティリティ ===== */
+const $=id=>document.getElementById(id);
+function esc(s){ return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function b64utf8(s){ const b=new TextEncoder().encode(s); let x=""; for(let i=0;i<b.length;i+=0x8000){ x+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000)); } return btoa(x); }
+let toastTimer=null;
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),2400); }
+
+/* ===== 起動 ===== */
+function boot(){
+  const c=creds();
+  if(c.email&&c.pass){
+    $("gate").style.display="none";
+    const cache=loadCache();
+    if(cache){ THEMES=cache.themes||[]; SHEET_URL=cache.sheetUrl||""; render(); }
+    else showLoading();
+    fetchAll();
+  } else showGate();
+}
+function showGate(err){ $("gate").style.display="flex"; $("gateErr").textContent=err||""; setTimeout(()=>$("gateMail").focus(),60); }
+$("pwEye").onclick=()=>{ const i=$("gatePass"); const s=i.type==="password"; i.type=s?"text":"password"; $("pwEye").textContent=s?"🙈":"👁"; };
+["gateMail","gatePass"].forEach(id=>$(id).addEventListener("keydown",e=>{ if(e.key==="Enter") submitGate(); }));
+$("gateBtn").onclick=submitGate;
+function submitGate(){
+  const email=$("gateMail").value.trim(), pass=$("gatePass").value;
+  if(!email||!pass) return;
+  saveCreds(email,pass,$("gateKeep").checked);
+  $("gate").style.display="none";
+  showLoading();
+  fetchAll();
+}
+$("srcBadge").onclick=()=>{ if(confirm("ログアウトしますか？")){ clearCreds(); location.reload(); } };
+
+function showLoading(){ $("list").innerHTML='<div class="empty"><div class="spin"></div>読み込み中…<br><span style="font-size:10.5px">初回は20秒ほどかかることがあります</span></div>'; }
+function setBadge(state){ const b=$("srcBadge"); if(state==="live"){ b.className=""; b.textContent="● ライブ"; } else if(state==="load"){ b.className=""; b.textContent="● 読込中…"; } else { b.className="err"; b.textContent="● オフライン"; } }
+
+/* ===== データ取得 ===== */
+async function fetchOnce(url,ms){
+  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),ms);
+  try{ const r=await fetch(url,{signal:ctrl.signal}); const t=await r.text(); if(!t||t.trim()[0]!=="{") throw new Error("bad response"); return JSON.parse(t); }
+  finally{ clearTimeout(to); }
+}
+async function fetchAll(){
+  setBadge("load");
+  let j=null;
+  for(let i=0;i<3&&!j;i++){ try{ j=await fetchOnce(GAS_URL+"?api=all&"+authQS(), i===0?25000:12000); }catch(e){ j=null; } }
+  if(!j){ setBadge("err"); if(!THEMES.length) $("list").innerHTML='<div class="empty"><div class="big">📡</div>読み込みに失敗しました<br><button class="pchip" style="margin-top:14px" onclick="fetchAll()">再読み込み</button></div>'; return; }
+  if(!j.ok){ if(j.error==="unauthorized"){ clearCreds(); showGate("メールまたはパスワードが違います"); } else { setBadge("err"); toast("エラー: "+(j.error||"不明")); } return; }
+  THEMES=j.themes||[]; SHEET_URL=j.sheetUrl||"";
+  try{ localStorage.setItem(CACHE_KEY,JSON.stringify({themes:THEMES,sheetUrl:SHEET_URL})); }catch(e){}
+  const sb=$("sheetBtn"); if(SHEET_URL){ sb.href=SHEET_URL; sb.style.display=""; }
+  setBadge("live"); render();
+}
+function loadCache(){ try{ const s=localStorage.getItem(CACHE_KEY); return s?JSON.parse(s):null; }catch(e){ return null; } }
+
+async function postAction(payload){
+  const c=creds();
+  const body=b64utf8(JSON.stringify({...payload,email:c.email,pass:c.pass}));
+  const r=await fetch(GAS_URL,{method:"POST",body:body});
+  const t=await r.text();
+  if(!t||t.trim()[0]!=="{") throw new Error("bad response");
+  return JSON.parse(t);
+}
+
+/* ===== 描画 ===== */
+const ST=[["all","すべて"],["洗い出し","洗い出し"],["対策中","対策中"],["効果確認","効果確認"],["完了","完了"]];
+function statusClass(s){ return s==="完了"?"sb-fin":s==="効果確認"?"sb-chk":s==="対策中"?"sb-do":"sb-out"; }
+function render(){
+  $("fab").style.display="flex";
+  let html='<div class="pchips">'+ST.map(([k,l])=>{
+    const n=k==="all"?THEMES.length:THEMES.filter(t=>t.status===k).length;
+    return `<button class="pchip${TSTATUS===k?" on":""}" data-s="${k}">${l}${n?" "+n:""}</button>`;
+  }).join("")+'</div>';
+  const list=THEMES.filter(t=>TSTATUS==="all"||t.status===TSTATUS);
+  if(!THEMES.length){
+    html+='<div class="empty"><div class="big">💡</div>まだ改善アイテムがありません<br>現場・事務のムダを見つけたら<br>右下の「＋ 追加」から書き留めましょう</div>';
+  } else if(!list.length){
+    html+='<div class="empty" style="padding:36px 0">この状態の項目はありません</div>';
+  } else {
+    html+='<div class="cards">'+list.map(thCard).join("")+'</div>';
+  }
+  $("list").innerHTML=html;
+  document.querySelectorAll(".pchip[data-s]").forEach(b=>b.onclick=()=>{ TSTATUS=b.dataset.s; render(); });
+}
+function thCard(t){
+  const cc=t.status==="完了"?"var(--ok)":t.status==="効果確認"?"var(--warn)":t.status==="対策中"?"var(--info)":"#9ab";
+  return `<div class="tcard" style="--cc:${cc}" onclick="openTh('${esc(t.id)}')">
+    <div class="th"><span class="t">${esc(t.title)}</span><span class="sbadge ${statusClass(t.status)}">${esc(t.status)}</span></div>
+    ${t.waste?`<div class="body"><span class="lbl">現状のムダ</span>${esc(t.waste)}</div>`:""}
+    ${t.plan?`<div class="body"><span class="lbl">対策案</span>${esc(t.plan)}</div>`:""}
+    <div class="meta"><span class="catb">${esc(t.cat||"その他")}</span>${t.by?`<span>${esc(t.by)}</span>`:""}${t.memo?`<span>📝 ${esc(t.memo)}</span>`:""}</div>
+  </div>`;
+}
+
+/* ===== モーダル ===== */
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).classList.remove("show"));
+document.querySelectorAll(".mwrap").forEach(w=>w.addEventListener("click",e=>{ if(e.target===w) w.classList.remove("show"); }));
+$("fab").onclick=()=>openThNew();
+function openThNew(){
+  editThId=null;
+  $("thTitle").textContent="改善アイテムを追加";
+  $("tCat").value="現場"; $("tStatus").value="洗い出し";
+  $("tTitle").value=""; $("tWaste").value=""; $("tPlan").value=""; $("tMemo").value="";
+  $("thErr").textContent=""; $("thDel").style.display="none";
+  $("thWrap").classList.add("show");
+}
+function openTh(id){
+  const t=THEMES.find(x=>x.id===id); if(!t) return;
+  editThId=id;
+  $("thTitle").textContent="改善アイテムを編集";
+  $("tCat").value=["現場","事務","その他"].includes(t.cat)?t.cat:"その他";
+  $("tStatus").value=["洗い出し","対策中","効果確認","完了"].includes(t.status)?t.status:"洗い出し";
+  $("tTitle").value=t.title||""; $("tWaste").value=t.waste||""; $("tPlan").value=t.plan||""; $("tMemo").value=t.memo||"";
+  $("thErr").textContent=""; $("thDel").style.display="";
+  $("thWrap").classList.add("show");
+}
+$("thSave").onclick=async()=>{
+  const title=$("tTitle").value.trim();
+  if(!title){ $("thErr").textContent="タイトルを入力してください"; return; }
+  const theme={ id:editThId||"", cat:$("tCat").value, title, waste:$("tWaste").value.trim(), plan:$("tPlan").value.trim(), status:$("tStatus").value, memo:$("tMemo").value.trim() };
+  const btn=$("thSave"); btn.disabled=true; btn.textContent="保存中…"; $("thErr").textContent="";
+  try{
+    const j=await postAction({action:"saveTheme",theme});
+    if(!j.ok) throw new Error(j.error||"保存できませんでした");
+    $("thWrap").classList.remove("show");
+    toast(editThId?"更新しました":"追加しました");
+    await fetchAll();
+  }catch(e){ $("thErr").textContent="保存エラー: "+e.message; }
+  finally{ btn.disabled=false; btn.textContent="保存する"; }
+};
+$("thDel").onclick=async()=>{
+  if(!editThId) return;
+  const t=THEMES.find(x=>x.id===editThId);
+  if(!confirm("「"+(t?t.title:"")+"」を削除しますか？")) return;
+  try{
+    const j=await postAction({action:"deleteTheme",id:editThId});
+    if(!j.ok) throw new Error(j.error||"削除できませんでした");
+    $("thWrap").classList.remove("show");
+    toast("削除しました");
+    await fetchAll();
+  }catch(e){ $("thErr").textContent="削除エラー: "+e.message; }
+};
+
+boot();
+</script>
+</body>
+</html>
