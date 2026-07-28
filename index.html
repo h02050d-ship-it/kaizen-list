@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#d97706">
-<title>改善リスト｜林材木店</title>
+<title>改善・アイデア帳｜林材木店</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23d97706'/><text x='51' y='46.5' font-size='60' text-anchor='middle' dominant-baseline='central' fill='%23ffffff' font-family='sans-serif' font-weight='bold'>改</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23d97706'/><text x='51' y='46.5' font-size='60' text-anchor='middle' dominant-baseline='central' fill='%23ffffff' font-family='sans-serif' font-weight='bold'>改</text></svg>">
-<meta name="apple-mobile-web-app-title" content="改善リスト">
+<meta name="apple-mobile-web-app-title" content="改善・アイデア帳">
 <style>
 :root{
   --bg:#f7f4ee; --card:#ffffff; --ink:#2e281f; --sub:#8a8171; --line:#e8e1d3;
@@ -100,7 +100,7 @@ main{padding:10px 14px 0;max-width:820px;margin:0 auto}
 <body>
 
 <header>
-  <div class="ttl">💡 改善リスト<small>HAYASHI LUMBER — ムダの洗い出し・対策管理</small></div>
+  <div class="ttl">💡 改善・アイデア帳<small>HAYASHI LUMBER — 改善案・アイデア・思いつきを何でも</small></div>
   <button id="srcBadge">…</button>
   <a class="hbtn" id="sheetBtn" target="_blank" style="display:none">📊</a>
 </header>
@@ -123,7 +123,7 @@ main{padding:10px 14px 0;max-width:820px;margin:0 auto}
         </div>
       </div>
       <div class="fld"><label>タイトル<em>*</em></label><input type="text" id="tTitle" placeholder="例：モルダーの埋木飛びを減らす"></div>
-      <div class="fld"><label>現状のムダ</label><textarea id="tWaste" placeholder="いま何がムダ・ロスになっているか"></textarea></div>
+      <div class="fld"><label>現状の課題・ムダ</label><textarea id="tWaste" placeholder="いま何が課題・ムダか（思いつきだけならタイトルのみでOK）"></textarea></div>
       <div class="fld"><label>対策案</label><textarea id="tPlan" placeholder="どう改善するか"></textarea></div>
       <div class="fld"><label>メモ</label><textarea id="tMemo" placeholder="補足（任意）"></textarea></div>
       <div class="merr" id="thErr"></div>
@@ -137,8 +137,8 @@ main{padding:10px 14px 0;max-width:820px;margin:0 auto}
 <div id="gate">
   <div class="gcard">
     <div class="logo">💡</div>
-    <h1>改善リスト</h1>
-    <p>現場・事務のムダを洗い出して対策まで管理</p>
+    <h1>改善・アイデア帳</h1>
+    <p>改善案・アイデア・思いつきを書き留めて完了まで管理</p>
     <input id="gateMail" type="email" placeholder="メールアドレス" autocomplete="username">
     <div class="pwrow">
       <input id="gatePass" type="password" placeholder="パスワード" autocomplete="current-password">
@@ -260,7 +260,7 @@ function render(){
   }).join("")+'</div>';
   const list=THEMES.filter(t=>TSTATUS==="all"||t.status===TSTATUS);
   if(!THEMES.length){
-    html+='<div class="empty"><div class="big">💡</div>まだ改善アイテムがありません<br>現場・事務のムダを見つけたら<br>右下の「＋ 追加」から書き留めましょう</div>';
+    html+='<div class="empty"><div class="big">💡</div>まだ何もありません<br>改善案・アイデア・思いつきは<br>右下の「＋ 追加」から気軽に書き留めましょう</div>';
   } else if(!list.length){
     html+='<div class="empty" style="padding:36px 0">この状態の項目はありません</div>';
   } else {
@@ -273,7 +273,7 @@ function thCard(t){
   const cc=t.status==="完了"?"var(--ok)":t.status==="効果確認"?"var(--warn)":t.status==="対策中"?"var(--info)":"#9ab";
   return `<div class="tcard" style="--cc:${cc}" onclick="openTh('${esc(t.id)}')">
     <div class="th"><span class="t">${esc(t.title)}</span><span class="sbadge ${statusClass(t.status)}">${esc(t.status)}</span></div>
-    ${t.waste?`<div class="body"><span class="lbl">現状のムダ</span>${esc(t.waste)}</div>`:""}
+    ${t.waste?`<div class="body"><span class="lbl">現状の課題・ムダ</span>${esc(t.waste)}</div>`:""}
     ${t.plan?`<div class="body"><span class="lbl">対策案</span>${esc(t.plan)}</div>`:""}
     <div class="meta"><span class="catb">${esc(t.cat||"その他")}</span>${t.by?`<span>${esc(t.by)}</span>`:""}${t.memo?`<span>📝 ${esc(t.memo)}</span>`:""}</div>
   </div>`;
